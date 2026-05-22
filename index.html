@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portoex · Hub Performance Responsáveis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/PptxGenJS@v3.12.0/dist/pptxgen.bundle.js"></script>
+<style>
+:root{
+  --bg0:#0A1426; --bg1:#0F1B33; --bg2:#162644; --bg3:#1E3155;
+  --bd1:#243B61; --bd2:#2E4878;
+  --t1:#F1F5F9; --t2:#94A3B8; --t3:#64748B;
+  --blue:#3B82F6; --blue2:#1E40AF; --blue3:#1E3A8A;
+  --or:#F97316; --or2:#EA580C; --or3:#FB923C;
+  --gn:#10B981; --rd:#EF4444; --yl:#F59E0B;
+  --rad:10px; --rad-sm:6px;
+  --shadow:0 4px 12px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.6);
+  --shadow-lg:0 20px 50px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg0);color:var(--t1);font-family:'Manrope',sans-serif;font-size:14px;line-height:1.5}
+body{background:radial-gradient(ellipse 1200px 600px at 50% -100px, rgba(59,130,246,.12), transparent 60%),
+                radial-gradient(ellipse 800px 500px at 90% 50%, rgba(249,115,22,.08), transparent 50%),
+                var(--bg0);min-height:100vh}
+.disp{font-family:'Sora',sans-serif;letter-spacing:-.02em}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;color:inherit}
+a{color:var(--blue);text-decoration:none}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:4px}
+::-webkit-scrollbar-track{background:var(--bg0)}
+
+/* ─────────── LOGIN ─────────── */
+#vLogin{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(circle at 30% 20%, rgba(59,130,246,.18), transparent 45%),
+             radial-gradient(circle at 70% 80%, rgba(249,115,22,.12), transparent 50%),
+             var(--bg0)}
+.login-box{background:linear-gradient(180deg,var(--bg2),var(--bg1));border:1px solid var(--bd1);
+  border-radius:16px;padding:42px 38px;width:100%;max-width:430px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.login-box::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--blue),var(--or))}
+.login-logo{font-family:'Sora',sans-serif;font-size:34px;font-weight:800;letter-spacing:-.03em;color:var(--t1);text-align:center;margin-bottom:6px}
+.login-logo span{color:var(--or)}
+.login-sub{font-size:12.5px;color:var(--t2);text-align:center;margin-bottom:30px;letter-spacing:.05em;text-transform:uppercase}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.field input,.field select{width:100%;background:var(--bg0);border:1px solid var(--bd1);border-radius:var(--rad);
+  padding:12px 14px;font-size:14px;color:var(--t1);transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;padding:13px;border-radius:var(--rad);
+  font-size:14px;font-weight:600;letter-spacing:.03em;margin-top:8px;transition:transform .15s,box-shadow .2s;
+  box-shadow:0 4px 16px rgba(249,115,22,.35)}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(249,115,22,.5)}
+.btn-login:active{transform:translateY(0)}
+.login-loading{display:none;margin-top:14px;color:var(--t2);font-size:13px;text-align:center;align-items:center;justify-content:center;gap:10px}
+.login-loading.show{display:flex}
+.spinner{width:18px;height:18px;border:2px solid var(--bd2);border-top-color:var(--or);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.login-hint{margin-top:18px;font-size:11px;color:var(--t3);text-align:center;padding:10px;background:rgba(59,130,246,.05);border-radius:var(--rad-sm)}
+
+/* ─────────── HEADER ─────────── */
+.header{position:sticky;top:0;background:rgba(15,27,51,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--bd1);
+  padding:14px 28px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.hlogo{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.02em;cursor:pointer;color:var(--t1)}
+.hlogo span{color:var(--or)}
+.hlogo .sep{color:var(--t3);font-weight:400;margin:0 8px}
+.hlogo .sub{font-size:12.5px;color:var(--t2);font-weight:500;letter-spacing:0}
+.hright{display:flex;align-items:center;gap:14px}
+.period-sel{background:var(--bg2);border:1px solid var(--bd1);border-radius:var(--rad-sm);padding:8px 12px;font-size:13px;color:var(--t1);cursor:pointer;font-weight:500}
+.period-sel:focus{outline:none;border-color:var(--blue)}
+.huser{font-size:13px;color:var(--t2)}
+.havatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--blue3),var(--or2));
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;letter-spacing:.05em}
+
+/* ─────────── MAIN ─────────── */
+.main{padding:28px;max-width:1400px;margin:0 auto}
+
+/* breadcrumb */
+.crumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2);margin-bottom:18px}
+.crumb a{color:var(--t2);cursor:pointer}
+.crumb a:hover{color:var(--or)}
+.crumb svg{width:14px;height:14px;opacity:.5}
+
+/* page title */
+.pg-title{margin-bottom:22px}
+.pg-title h1{font-family:'Sora',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--t1);margin-bottom:4px}
+.pg-title p{font-size:13.5px;color:var(--t2)}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
+.kpi{background:linear-gradient(160deg,var(--bg2) 0%,var(--bg1) 100%);border:1px solid var(--bd1);border-radius:var(--rad);
+  padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi:hover{border-color:var(--bd2)}
+.kpi::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--blue)}
+.kpi.or::before{background:var(--or)}
+.kpi.gn::before{background:var(--gn)}
+.kpi.rd::before{background:var(--rd)}
+.kpi.yl::before{background:var(--yl)}
+.kpi-lbl{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:6px}
+.kpi-val{font-family:'Sora',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--t1)}
+.kpi-sub{font-size:11.5px;color:var(--t3);margin-top:4px}
+
+/* card */
+.card{background:linear-gradient(180deg,var(--bg2),var(--bg1));border:1px solid var(--bd1);border-radius:var(--rad);
+  padding:20px 22px;margin-bottom:18px}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-h h2{font-family:'Sora',sans-serif;font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--t1)}
+.card-h .tag{font-size:11px;color:var(--t3);background:var(--bg0);padding:4px 10px;border-radius:12px;border:1px solid var(--bd1)}
+
+/* chart */
+.chart-wrap{position:relative;height:300px}
+.chart-wrap.sm{height:230px}
+
+/* search & filters */
+.filters{display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+.search{flex:1;min-width:240px;position:relative}
+.search input{width:100%;background:var(--bg2);border:1px solid var(--bd1);border-radius:var(--rad-sm);
+  padding:10px 14px 10px 38px;font-size:13.5px;color:var(--t1)}
+.search input:focus{outline:none;border-color:var(--blue)}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--t3)}
+.fchip{background:var(--bg2);border:1px solid var(--bd1);border-radius:var(--rad-sm);padding:8px 14px;font-size:12.5px;color:var(--t2);transition:all .15s}
+.fchip:hover{color:var(--t1);border-color:var(--bd2)}
+.fchip.active{background:var(--or);color:#fff;border-color:var(--or);font-weight:600}
+
+/* ranking table */
+.rank-tbl{width:100%;border-collapse:separate;border-spacing:0}
+.rank-tbl thead th{background:var(--bg0);color:var(--t2);text-align:left;padding:11px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;border-bottom:1px solid var(--bd1)}
+.rank-tbl thead th.r{text-align:right}
+.rank-tbl tbody tr{transition:background .15s;cursor:pointer}
+.rank-tbl tbody tr:hover{background:rgba(249,115,22,.06)}
+.rank-tbl tbody td{padding:12px 14px;font-size:13px;border-bottom:1px solid var(--bd1);vertical-align:middle}
+.rank-tbl tbody td.r{text-align:right;font-variant-numeric:tabular-nums}
+.rank-tbl tbody tr:last-child td{border-bottom:none}
+.rk-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;
+  background:var(--bg0);font-weight:700;font-size:12px;color:var(--t2);font-family:'Sora',sans-serif}
+.rk-badge.top{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;box-shadow:0 2px 8px rgba(249,115,22,.4)}
+.rk-name{font-weight:600;color:var(--t1)}
+.rk-name .meta{display:block;font-size:11.5px;color:var(--t3);font-weight:400;margin-top:2px}
+.rk-taxa{font-weight:700;font-family:'Sora',sans-serif}
+.rk-taxa.ok{color:var(--gn)}
+.rk-taxa.warn{color:var(--yl)}
+.rk-taxa.bad{color:var(--rd)}
+.rk-fora{color:var(--t2);font-weight:500}
+.rk-fora.has{color:var(--rd);font-weight:600}
+.bar{display:inline-block;width:60px;height:6px;background:var(--bg0);border-radius:3px;overflow:hidden;margin-right:8px;vertical-align:middle}
+.bar > div{height:100%;background:var(--blue);border-radius:3px}
+
+/* meta pill */
+.meta-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:600;letter-spacing:.02em}
+.meta-pill.ok{background:rgba(16,185,129,.13);color:var(--gn)}
+.meta-pill.warn{background:rgba(245,158,11,.13);color:var(--yl)}
+.meta-pill.bad{background:rgba(239,68,68,.13);color:var(--rd)}
+
+/* ─────────── DETAIL VIEW ─────────── */
+.det-hero{background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);border:1px solid var(--bd1);
+  border-radius:var(--rad);padding:24px 28px;margin-bottom:22px;position:relative;overflow:hidden}
+.det-hero::after{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;
+  background:radial-gradient(circle,rgba(249,115,22,.15),transparent 70%)}
+.det-hero-row{display:flex;align-items:center;gap:18px;position:relative;z-index:1}
+.det-rank{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:14px;
+  background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;font-family:'Sora',sans-serif;font-weight:800;font-size:20px;
+  box-shadow:0 6px 18px rgba(249,115,22,.4)}
+.det-info{flex:1}
+.det-info h1{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.det-info p{font-size:13px;color:var(--t2)}
+.det-actions{display:flex;gap:10px}
+.btn-prim{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;padding:11px 20px;border-radius:var(--rad);
+  font-size:13px;font-weight:600;letter-spacing:.02em;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 4px 14px rgba(249,115,22,.3);transition:transform .15s,box-shadow .2s}
+.btn-prim:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(249,115,22,.5)}
+.btn-prim svg{width:16px;height:16px}
+.btn-ghost{background:var(--bg2);color:var(--t2);padding:11px 18px;border-radius:var(--rad);font-size:13px;font-weight:500;border:1px solid var(--bd1);transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-ghost:hover{color:var(--t1);border-color:var(--bd2);background:var(--bg3)}
+
+/* 2-col grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+
+/* mini table for breakdowns */
+.mtbl{width:100%;font-size:12.5px}
+.mtbl th{text-align:left;padding:8px 10px;color:var(--t2);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;background:var(--bg0);border-bottom:1px solid var(--bd1)}
+.mtbl th.r{text-align:right}
+.mtbl td{padding:9px 10px;border-bottom:1px solid var(--bd1)}
+.mtbl td.r{text-align:right;font-variant-numeric:tabular-nums}
+.mtbl tr:last-child td{border-bottom:none}
+.mtbl tr:hover{background:rgba(59,130,246,.04)}
+
+/* MDs list */
+.mds-list{max-height:380px;overflow-y:auto;border:1px solid var(--bd1);border-radius:var(--rad-sm)}
+.md-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bd1);align-items:center;font-size:12.5px}
+.md-row:last-child{border-bottom:none}
+.md-row:hover{background:var(--bg0)}
+.md-num{font-family:'Sora',sans-serif;font-weight:700;color:var(--or);font-size:13px}
+.md-info{min-width:0}
+.md-info .ti{font-weight:600;color:var(--t1);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.md-info .su{font-size:11.5px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.md-date{font-size:11.5px;color:var(--t2);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+
+/* toast */
+.toast{position:fixed;top:80px;right:28px;background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--rad);
+  padding:13px 20px;font-size:13.5px;color:var(--t1);display:none;align-items:center;gap:10px;z-index:1000;
+  animation:slideIn .3s ease;box-shadow:var(--shadow-lg)}
+.toast.show{display:flex}
+.toast .ti{color:var(--gn);font-size:18px}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* overlay loading */
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,20,38,.88);z-index:200;
+  align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(4px)}
+.overlay.show{display:flex}
+.ov-text{font-size:15px;color:var(--t2)}
+.ov-spin{width:48px;height:48px;border:3px solid var(--bd2);border-top-color:var(--or);border-radius:50%;animation:spin .8s linear infinite}
+
+/* banner */
+.banner{background:linear-gradient(90deg,rgba(59,130,246,.12),rgba(249,115,22,.08));border:1px solid var(--bd1);
+  border-left:3px solid var(--or);padding:11px 16px;border-radius:var(--rad-sm);font-size:12.5px;color:var(--t2);margin-bottom:20px}
+.banner b{color:var(--t1)}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────── LOGIN ─────────────────────── -->
+<div id="vLogin">
+  <div class="login-box">
+    <div class="login-logo">PORTO<span>EX</span></div>
+    <div class="login-sub">Performance Hub · Responsáveis de Entrega</div>
+    <div class="field">
+      <label>Usuário</label>
+      <input type="email" id="lEmail" value="brenda@portoex.com.br" placeholder="seu@portoex.com.br">
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="lPass" value="••••••••" placeholder="••••••••">
+    </div>
+    <div class="field">
+      <label>Período</label>
+      <select id="lPeriod">
+        <option value="mai">Maio 2026</option>
+        <option value="abr">Abril 2026</option>
+      </select>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Acessar Painel</button>
+    <div class="login-loading" id="lLoading"><div class="spinner"></div>Carregando dados da Tela 376…</div>
+    <div class="login-hint">📊 Dados reais exportados do Brudam · Tela 376 · Data Prev. Entrega</div>
+  </div>
+</div>
+
+<!-- ─────────────────────── DASHBOARD ─────────────────────── -->
+<div id="vDash" style="display:none">
+  <div class="header">
+    <div class="hlogo" onclick="showDash()">PORTO<span>EX</span><span class="sep">·</span><span class="sub">Hub Responsáveis</span></div>
+    <div class="hright">
+      <select class="period-sel" id="dPeriod" onchange="changePeriod(this.value)">
+        <option value="mai">Maio 2026</option>
+        <option value="abr">Abril 2026</option>
+      </select>
+      <div class="huser" id="hUserLabel"></div>
+      <div class="havatar" id="hAvatar">BR</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="banner" id="banner"></div>
+
+    <div class="pg-title">
+      <h1>Performance de Responsáveis de Entrega</h1>
+      <p id="subTitle">Ranking completo do mês com taxa de pontualidade, MDs fora do prazo e detalhamento por UF e destinatário.</p>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card">
+      <div class="card-h">
+        <h2>Distribuição: No Prazo × Fora do Prazo (Top 15 por volume)</h2>
+        <span class="tag" id="chartTag">Meta interna: 96%</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartTop"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h2>Ranking Completo · <span id="rkCount" style="color:var(--or)">0</span> responsáveis</h2>
+      </div>
+      <div class="filters">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="searchInp" placeholder="Buscar responsável por nome..." oninput="renderRank()">
+        </div>
+        <button class="fchip active" data-flt="all" onclick="setFilter('all')">Todos</button>
+        <button class="fchip" data-flt="meta" onclick="setFilter('meta')">≥ 96% (na meta)</button>
+        <button class="fchip" data-flt="warn" onclick="setFilter('warn')">85-95%</button>
+        <button class="fchip" data-flt="bad" onclick="setFilter('bad')">&lt; 85%</button>
+        <button class="fchip" data-flt="fora" onclick="setFilter('fora')">Com fora do prazo</button>
+      </div>
+      <table class="rank-tbl">
+        <thead>
+          <tr>
+            <th style="width:50px">#</th>
+            <th>Responsável</th>
+            <th class="r" style="width:90px">Total</th>
+            <th class="r" style="width:90px">Fora</th>
+            <th class="r" style="width:180px">Taxa No Prazo</th>
+            <th class="r" style="width:60px"></th>
+          </tr>
+        </thead>
+        <tbody id="rkBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────── DETAIL ─────────────────────── -->
+<div id="vDet" style="display:none">
+  <div class="header">
+    <div class="hlogo" onclick="showDash()">PORTO<span>EX</span><span class="sep">·</span><span class="sub">Hub Responsáveis</span></div>
+    <div class="hright">
+      <select class="period-sel" id="dPeriod2" onchange="changePeriod(this.value)">
+        <option value="mai">Maio 2026</option>
+        <option value="abr">Abril 2026</option>
+      </select>
+      <div class="huser" id="hUserLabel2"></div>
+      <div class="havatar" id="hAvatar2">BR</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="crumb">
+      <a onclick="showDash()">Hub</a>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      <span id="crumbName">Responsável</span>
+    </div>
+
+    <div class="det-hero">
+      <div class="det-hero-row">
+        <div class="det-rank" id="detRank">#1</div>
+        <div class="det-info">
+          <h1 id="detName">Responsável</h1>
+          <p id="detMeta">— · — entregas no mês</p>
+        </div>
+        <div class="det-actions">
+          <button class="btn-ghost" onclick="showDash()">← Voltar</button>
+          <button class="btn-prim" onclick="gerarPPTX()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Gerar PPTX
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpis" id="detKpis"></div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-h"><h2>Evolução · No Prazo × Fora do Prazo</h2></div>
+        <div class="chart-wrap sm"><canvas id="chartDet"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>Performance por UF</h2></div>
+        <table class="mtbl">
+          <thead><tr><th>UF</th><th class="r">Total</th><th class="r">Fora</th><th class="r">Taxa</th></tr></thead>
+          <tbody id="detUFs"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><h2>MDs Fora do Prazo · <span id="mdsCount" style="color:var(--rd)">0</span></h2></div>
+      <div class="mds-list" id="mdsList"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-h"><h2>Top Destinatários</h2></div>
+        <table class="mtbl">
+          <thead><tr><th>Destinatário</th><th class="r">Total</th><th class="r">Fora</th><th class="r">Taxa</th></tr></thead>
+          <tbody id="detDest"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-h"><h2>Top Clientes (pagadores)</h2></div>
+        <table class="mtbl">
+          <thead><tr><th>Cliente</th><th class="r">Total</th><th class="r">Fora</th><th class="r">Taxa</th></tr></thead>
+          <tbody id="detCli"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- toast & overlay -->
+<div class="toast" id="toast"><span class="ti">✓</span><span id="toastMsg">Pronto</span></div>
+<div class="overlay" id="overlay"><div class="ov-spin"></div><div class="ov-text" id="ovText">Gerando apresentação…</div></div>
+
+<!-- ───────────── DATA ───────────── -->
+<script src="data/abril.js"></script>
+<script src="data/maio.js"></script>
+
+<!-- ───────────── APP ───────────── -->
+<script>
+const META = 96;
+let CURRENT = 'mai';
+let CURRENT_DATA = null;
+let CURRENT_FILTER = 'all';
+let CURRENT_RESP = null;
+let chartTopInst = null;
+let chartDetInst = null;
+
+function getData(period){ return period === 'abr' ? window.DATA_ABR : window.DATA_MAI; }
+
+function doLogin(){
+  const email = document.getElementById('lEmail').value.trim();
+  if(!email){ alert('Informe o usuário'); return; }
+  CURRENT = document.getElementById('lPeriod').value;
+  document.getElementById('lLoading').classList.add('show');
+  const initials = email.split('@')[0].slice(0,2).toUpperCase();
+  document.getElementById('hAvatar').textContent = initials;
+  document.getElementById('hAvatar2').textContent = initials;
+  document.getElementById('hUserLabel').textContent = email.split('@')[0];
+  document.getElementById('hUserLabel2').textContent = email.split('@')[0];
+  setTimeout(()=>{
+    document.getElementById('vLogin').style.display='none';
+    showDash();
+  }, 700);
+}
+
+function changePeriod(p){
+  CURRENT = p;
+  document.getElementById('dPeriod').value = p;
+  document.getElementById('dPeriod2').value = p;
+  if(document.getElementById('vDet').style.display !== 'none'){
+    // se está em detalhe, tenta achar o mesmo responsável no novo período
+    if(CURRENT_RESP){
+      const newData = getData(p);
+      const found = newData.responsaveis.find(r => r.name === CURRENT_RESP.name);
+      if(found){ openDet(found.id); return; }
+    }
+    showDash();
+  } else {
+    renderDash();
+  }
+}
+
+function showDash(){
+  document.getElementById('vDet').style.display = 'none';
+  document.getElementById('vDash').style.display = 'block';
+  window.scrollTo(0,0);
+  renderDash();
+}
+
+function renderDash(){
+  CURRENT_DATA = getData(CURRENT);
+  const d = CURRENT_DATA;
+  document.getElementById('banner').innerHTML = 
+    `📅 <b>${d.mes}</b> · ${d.periodo} · <b>${d.responsaveis.length}</b> responsáveis · <b>${d.kpis.total.toLocaleString('pt-BR')}</b> entregas · taxa geral <b>${d.kpis.taxa}%</b>`;
+  document.getElementById('subTitle').textContent = 
+    `Ranking de ${d.responsaveis.length} responsáveis · ${d.kpis.total.toLocaleString('pt-BR')} entregas no período · taxa geral ${d.kpis.taxa}% (${d.kpis.fora} fora do prazo)`;
+
+  // KPIs
+  const k = d.kpis;
+  const tcls = k.taxa >= META ? 'gn' : (k.taxa >= 85 ? 'yl' : 'rd');
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-lbl">Entregas no Mês</div><div class="kpi-val">${k.total.toLocaleString('pt-BR')}</div><div class="kpi-sub">${d.mes}</div></div>
+    <div class="kpi ${tcls}"><div class="kpi-lbl">Taxa Geral</div><div class="kpi-val">${k.taxa}%</div><div class="kpi-sub">${k.taxa >= META ? '✓ acima da meta' : '↓ abaixo da meta de 96%'}</div></div>
+    <div class="kpi gn"><div class="kpi-lbl">No Prazo</div><div class="kpi-val">${k.sucesso.toLocaleString('pt-BR')}</div><div class="kpi-sub">entregas conformes</div></div>
+    <div class="kpi rd"><div class="kpi-lbl">Fora do Prazo</div><div class="kpi-val">${k.fora.toLocaleString('pt-BR')}</div><div class="kpi-sub">${((k.fora/k.total)*100).toFixed(1)}% do total</div></div>
+    <div class="kpi or"><div class="kpi-lbl">Responsáveis</div><div class="kpi-val">${k.qtd_resp}</div><div class="kpi-sub">${k.qtd_ufs} UFs atendidas</div></div>
+  `;
+
+  document.getElementById('rkCount').textContent = d.responsaveis.length;
+  renderChartTop();
+  renderRank();
+}
+
+function renderChartTop(){
+  const ctx = document.getElementById('chartTop').getContext('2d');
+  const top = CURRENT_DATA.responsaveis.slice(0,15);
+  if(chartTopInst) chartTopInst.destroy();
+  chartTopInst = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: top.map(r => r.name.length > 22 ? r.name.slice(0,22)+'…' : r.name),
+      datasets:[
+        {label:'No Prazo', data: top.map(r=>r.sucesso), backgroundColor:'#3B82F6', borderRadius:4},
+        {label:'Fora do Prazo', data: top.map(r=>r.fora), backgroundColor:'#F97316', borderRadius:4}
+      ]
+    },
+    options:{
+      maintainAspectRatio:false, responsive:true,
+      plugins:{legend:{labels:{color:'#94A3B8',font:{family:'Manrope',size:12}}},
+               tooltip:{titleFont:{family:'Sora'},bodyFont:{family:'Manrope'}}},
+      scales:{
+        x:{stacked:true, ticks:{color:'#94A3B8',font:{size:10.5},maxRotation:60,minRotation:45},grid:{color:'rgba(36,59,97,.3)'}},
+        y:{stacked:true, ticks:{color:'#94A3B8',font:{size:11}},grid:{color:'rgba(36,59,97,.3)'}}
+      }
+    }
+  });
+}
+
+function setFilter(f){
+  CURRENT_FILTER = f;
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.toggle('active', c.dataset.flt===f));
+  renderRank();
+}
+
+function renderRank(){
+  const q = document.getElementById('searchInp').value.toLowerCase().trim();
+  const list = CURRENT_DATA.responsaveis.filter(r => {
+    if(q && !r.name.toLowerCase().includes(q)) return false;
+    if(CURRENT_FILTER==='meta' && r.taxa < META) return false;
+    if(CURRENT_FILTER==='warn' && (r.taxa < 85 || r.taxa >= META)) return false;
+    if(CURRENT_FILTER==='bad' && r.taxa >= 85) return false;
+    if(CURRENT_FILTER==='fora' && r.fora === 0) return false;
+    return true;
+  });
+  const max = Math.max(...CURRENT_DATA.responsaveis.map(r=>r.total));
+  const html = list.map(r => {
+    const tcls = r.taxa >= META ? 'ok' : (r.taxa >= 85 ? 'warn' : 'bad');
+    const pcls = r.taxa >= META ? 'ok' : (r.taxa >= 85 ? 'warn' : 'bad');
+    const barW = Math.round((r.total/max)*100);
+    return `<tr onclick="openDet(${r.id})">
+      <td><div class="rk-badge ${r.rank<=3?'top':''}">${r.rank}</div></td>
+      <td><div class="rk-name">${r.name}<span class="meta">${r.ufs.length} UFs · ${r.dest.length}+ destinatários · ${r.clientes.length}+ clientes</span></div></td>
+      <td class="r"><span class="bar"><div style="width:${barW}%"></div></span>${r.total}</td>
+      <td class="r"><span class="rk-fora ${r.fora>0?'has':''}">${r.fora}</span></td>
+      <td class="r"><span class="meta-pill ${pcls}">${r.taxa >= META ? '✓ na meta':(r.taxa>=85?'⚠ próximo':'✗ abaixo')}</span> &nbsp;<span class="rk-taxa ${tcls}">${r.taxa}%</span></td>
+      <td class="r" style="color:var(--t3)">→</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('rkBody').innerHTML = html || `<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--t3)">Nenhum responsável encontrado com esses filtros.</td></tr>`;
+}
+
+function openDet(id){
+  const r = CURRENT_DATA.responsaveis.find(x=>x.id===id);
+  if(!r) return;
+  CURRENT_RESP = r;
+  document.getElementById('vDash').style.display='none';
+  document.getElementById('vDet').style.display='block';
+  window.scrollTo(0,0);
+  
+  document.getElementById('crumbName').textContent = r.name;
+  document.getElementById('detRank').textContent = '#'+r.rank;
+  document.getElementById('detName').textContent = r.name;
+  document.getElementById('detMeta').innerHTML = 
+    `<b>${r.total.toLocaleString('pt-BR')}</b> entregas em ${CURRENT_DATA.mes} · atende <b>${r.ufs.length}</b> UFs · <b>${r.clientes.length}+</b> clientes pagadores`;
+
+  // KPIs detalhe
+  const tcls = r.taxa >= META ? 'gn' : (r.taxa >= 85 ? 'yl' : 'rd');
+  const prevDelta = r.prev.taxa ? (r.taxa - r.prev.taxa).toFixed(1) : null;
+  const deltaTxt = prevDelta !== null && r.prev.total > 0 ? 
+    (prevDelta > 0 ? `↑ +${prevDelta}p.p. vs mês anterior` : prevDelta < 0 ? `↓ ${prevDelta}p.p. vs mês anterior` : `→ estável vs mês anterior`) : 'sem histórico no mês anterior';
+  
+  document.getElementById('detKpis').innerHTML = `
+    <div class="kpi"><div class="kpi-lbl">Entregas</div><div class="kpi-val">${r.total.toLocaleString('pt-BR')}</div><div class="kpi-sub">${CURRENT_DATA.mes}</div></div>
+    <div class="kpi ${tcls}"><div class="kpi-lbl">Taxa No Prazo</div><div class="kpi-val">${r.taxa}%</div><div class="kpi-sub">${deltaTxt}</div></div>
+    <div class="kpi gn"><div class="kpi-lbl">No Prazo</div><div class="kpi-val">${r.sucesso}</div><div class="kpi-sub">conformes</div></div>
+    <div class="kpi rd"><div class="kpi-lbl">Fora do Prazo</div><div class="kpi-val">${r.fora}</div><div class="kpi-sub">${((r.fora/r.total)*100).toFixed(1)}% do total</div></div>
+    <div class="kpi or"><div class="kpi-lbl">Posição no Rank</div><div class="kpi-val">#${r.rank}</div><div class="kpi-sub">de ${CURRENT_DATA.responsaveis.length}</div></div>
+  `;
+
+  renderChartDet(r);
+  
+  // UFs
+  document.getElementById('detUFs').innerHTML = r.ufs.map(u => {
+    const cls = u.taxa >= META ? 'ok' : (u.taxa >= 85 ? 'warn' : 'bad');
+    return `<tr><td><b>${u.uf}</b></td><td class="r">${u.total}</td><td class="r" style="color:${u.fora>0?'var(--rd)':'var(--t2)'}">${u.fora}</td><td class="r"><span class="rk-taxa ${cls}">${u.taxa}%</span></td></tr>`;
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:20px">Sem dados</td></tr>';
+
+  // MDs fora
+  document.getElementById('mdsCount').textContent = r.mds_fora.length;
+  const mdsHtml = r.mds_fora.map(m => `
+    <div class="md-row">
+      <div class="md-num">MD ${m.md}</div>
+      <div class="md-info">
+        <div class="ti">${m.cliente} → ${m.dest}</div>
+        <div class="su">${m.cidade}/${m.uf} · status: ${m.status}</div>
+      </div>
+      <div class="md-date">Prev: ${m.prev}<br>${m.entrega ? 'Entr: '+m.entrega : '— sem entrega'}</div>
+    </div>
+  `).join('');
+  document.getElementById('mdsList').innerHTML = mdsHtml || '<div style="padding:40px;text-align:center;color:var(--gn)">✓ Nenhum MD fora do prazo neste mês!</div>';
+
+  // Destinatários
+  document.getElementById('detDest').innerHTML = r.dest.map(d => {
+    const cls = d.taxa >= META ? 'ok' : (d.taxa >= 85 ? 'warn' : 'bad');
+    return `<tr><td>${d.dest}</td><td class="r">${d.total}</td><td class="r" style="color:${d.fora>0?'var(--rd)':'var(--t2)'}">${d.fora}</td><td class="r"><span class="rk-taxa ${cls}">${d.taxa}%</span></td></tr>`;
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:20px">Sem dados</td></tr>';
+
+  // Clientes
+  document.getElementById('detCli').innerHTML = r.clientes.map(c => {
+    const cls = c.taxa >= META ? 'ok' : (c.taxa >= 85 ? 'warn' : 'bad');
+    return `<tr><td>${c.cli}</td><td class="r">${c.total}</td><td class="r" style="color:${c.fora>0?'var(--rd)':'var(--t2)'}">${c.fora}</td><td class="r"><span class="rk-taxa ${cls}">${c.taxa}%</span></td></tr>`;
+  }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:20px">Sem dados</td></tr>';
+}
+
+function renderChartDet(r){
+  const ctx = document.getElementById('chartDet').getContext('2d');
+  if(chartDetInst) chartDetInst.destroy();
+  // Estamos só com 2 meses, mostro Atual vs Anterior
+  const labels = [CURRENT === 'mai' ? 'Abril 2026' : 'Mês anterior', CURRENT_DATA.mes];
+  const sucesso = [r.prev.sucesso || 0, r.sucesso];
+  const fora = [r.prev.fora || 0, r.fora];
+  chartDetInst = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: labels,
+      datasets:[
+        {label:'No Prazo', data:sucesso, backgroundColor:'#3B82F6', borderRadius:4},
+        {label:'Fora do Prazo', data:fora, backgroundColor:'#F97316', borderRadius:4}
+      ]
+    },
+    options:{
+      maintainAspectRatio:false, responsive:true,
+      plugins:{legend:{labels:{color:'#94A3B8',font:{family:'Manrope'}}}},
+      scales:{
+        x:{stacked:true, ticks:{color:'#94A3B8'},grid:{color:'rgba(36,59,97,.3)'}},
+        y:{stacked:true, ticks:{color:'#94A3B8'},grid:{color:'rgba(36,59,97,.3)'}}
+      }
+    }
+  });
+}
+
+function showToast(msg){
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toast').classList.add('show');
+  setTimeout(()=>document.getElementById('toast').classList.remove('show'), 3200);
+}
+
+// ───────────── PPTX GENERATION ─────────────
+function gerarPPTX(){
+  if(!CURRENT_RESP) return;
+  document.getElementById('ovText').textContent = 'Gerando apresentação Portoex…';
+  document.getElementById('overlay').classList.add('show');
+  setTimeout(()=>{
+    try { buildPPTX(CURRENT_RESP); }
+    catch(e){ console.error(e); alert('Erro ao gerar PPTX: '+e.message); }
+    document.getElementById('overlay').classList.remove('show');
+  }, 200);
+}
+
+function buildPPTX(r){
+  const pres = new PptxGenJS();
+  pres.layout = "LAYOUT_WIDE";
+  pres.author = "Portoex Logística";
+  pres.title = `Performance ${r.name} - ${CURRENT_DATA.mes}`;
+
+  const C = {
+    navy:"0F1B33", navy2:"1E3A8A", blue:"3B82F6", blueLt:"60A5FA",
+    or:"F97316", or2:"EA580C", orLt:"FB923C",
+    white:"FFFFFF", offwhite:"F8FAFC", gray:"64748B", gray2:"94A3B8",
+    bg:"F1F5F9", red:"EF4444", green:"10B981", yellow:"F59E0B",
+    dark:"0A1426"
+  };
+  const sh = ()=>({type:"outer",color:"000000",blur:14,offset:3,angle:90,opacity:0.25});
+
+  // helper: header
+  const head = (s, title)=>{
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:13.33,h:0.65,fill:{color:C.navy},line:{color:C.navy}});
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:0.65,w:13.33,h:0.05,fill:{color:C.or},line:{color:C.or}});
+    s.addText("PORTO",{x:0.4,y:0.05,w:1.2,h:0.55,fontFace:"Calibri",fontSize:22,bold:true,color:C.white,valign:"middle"});
+    s.addText("EX",{x:1.18,y:0.05,w:0.6,h:0.55,fontFace:"Calibri",fontSize:22,bold:true,color:C.or,valign:"middle"});
+    s.addText(title,{x:1.95,y:0.05,w:9,h:0.55,fontFace:"Calibri",fontSize:14,color:C.white,valign:"middle",bold:true});
+    s.addText(CURRENT_DATA.mes,{x:10.5,y:0.05,w:2.5,h:0.55,fontFace:"Calibri",fontSize:11,color:C.gray2,valign:"middle",align:"right"});
+  };
+  const foot = s=>{
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:7.35,w:13.33,h:0.15,fill:{color:C.or},line:{color:C.or}});
+    s.addText("Portoex Logística · Performance Hub · Dados Brudam Tela 376",{x:0.4,y:7.05,w:9,h:0.3,fontFace:"Calibri",fontSize:9,color:C.gray});
+    s.addText("Confidencial · Uso Interno",{x:10,y:7.05,w:3,h:0.3,fontFace:"Calibri",fontSize:9,color:C.gray,align:"right"});
+  };
+
+  // ════════════ SLIDE 1 — CAPA ════════════
+  {
+    const s = pres.addSlide();
+    s.background = {color: C.dark};
+    // gradient effect with rectangles
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:13.33,h:7.5,fill:{color:C.navy},line:{color:C.navy}});
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:6,h:7.5,fill:{color:C.navy2,transparency:30},line:{color:C.navy2}});
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:6.7,w:13.33,h:0.8,fill:{color:C.or},line:{color:C.or}});
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:7.45,w:13.33,h:0.05,fill:{color:C.or2},line:{color:C.or2}});
+    
+    s.addText("PORTO",{x:0.6,y:0.6,w:1.7,h:0.7,fontFace:"Calibri",fontSize:32,bold:true,color:C.white,valign:"middle"});
+    s.addText("EX",{x:1.7,y:0.6,w:0.8,h:0.7,fontFace:"Calibri",fontSize:32,bold:true,color:C.or,valign:"middle"});
+    s.addText("L O G Í S T I C A",{x:0.6,y:1.3,w:5,h:0.3,fontFace:"Calibri",fontSize:10,color:C.gray2,charSpacing:6});
+
+    // title block
+    s.addText("RELATÓRIO DE PERFORMANCE",{x:0.6,y:2.5,w:12,h:0.45,fontFace:"Calibri",fontSize:14,color:C.or,bold:true,charSpacing:4});
+    s.addText(r.name,{x:0.6,y:3.0,w:12,h:1.1,fontFace:"Calibri",fontSize:42,bold:true,color:C.white});
+    s.addText(`Responsável de Entrega · ${CURRENT_DATA.mes}`,{x:0.6,y:4.15,w:12,h:0.4,fontFace:"Calibri",fontSize:16,color:C.blueLt});
+
+    // KPIs side panel
+    const tcl = r.taxa >= META ? C.green : (r.taxa >= 85 ? C.yellow : C.red);
+    s.addShape(pres.shapes.RECTANGLE,{x:7.5,y:4.9,w:5.3,h:1.6,fill:{color:C.dark,transparency:20},line:{color:C.or,width:1}});
+    s.addText(r.taxa+"%",{x:7.5,y:4.95,w:2.5,h:1.5,fontFace:"Calibri",fontSize:48,bold:true,color:tcl,valign:"middle",align:"center"});
+    s.addText("TAXA NO PRAZO\nMETA: 96%",{x:10,y:4.95,w:2.7,h:1.5,fontFace:"Calibri",fontSize:11,color:C.gray2,valign:"middle",bold:true,charSpacing:2});
+    s.addText(`${r.total} entregas · ${r.sucesso} no prazo · ${r.fora} fora do prazo`,{x:0.6,y:6.85,w:13,h:0.5,fontFace:"Calibri",fontSize:13,color:C.white,bold:true,valign:"middle"});
+  }
+
+  // ════════════ SLIDE 2 — RESUMO EXECUTIVO ════════════
+  {
+    const s = pres.addSlide();
+    s.background = {color: C.bg};
+    head(s, "RESUMO EXECUTIVO");
+
+    const kpis = [
+      {x:0.4, val:r.total.toString(), label:"Entregas\nno mês", bg:C.navy, vc:C.white, ac:C.or},
+      {x:3.65, val:r.taxa+"%", label:"Taxa No Prazo\nMeta: 96%", bg:C.navy2, vc:C.white, ac:C.orLt},
+      {x:6.9, val:r.sucesso.toString(), label:"No Prazo\nentregas conformes", bg:C.blue, vc:C.white, ac:C.white},
+      {x:10.15, val:r.fora.toString(), label:"Fora do Prazo\noportunidades", bg:r.fora>0?C.or:C.green, vc:C.white, ac:C.white}
+    ];
+    kpis.forEach(k=>{
+      s.addShape(pres.shapes.RECTANGLE,{x:k.x,y:1.05,w:2.85,h:3.6,fill:{color:k.bg},line:{color:k.bg},shadow:sh()});
+      s.addText(k.val,{x:k.x,y:1.4,w:2.85,h:1.4,fontFace:"Calibri",fontSize:46,bold:true,color:k.vc,align:"center",valign:"middle"});
+      s.addShape(pres.shapes.RECTANGLE,{x:k.x+0.65,y:2.8,w:1.55,h:0.04,fill:{color:k.ac},line:{color:k.ac}});
+      s.addText(k.label,{x:k.x+0.1,y:2.95,w:2.65,h:1.4,fontFace:"Calibri",fontSize:12,color:k.vc,align:"center",valign:"top"});
+    });
+
+    // Status box
+    const statusBg = r.taxa >= META ? C.green : (r.taxa >= 85 ? C.yellow : C.red);
+    const statusTxt = r.taxa >= META ? "✓ DENTRO DA META" : (r.taxa >= 85 ? "⚠ ATENÇÃO — PRÓXIMO DA META" : "✗ ABAIXO DA META — AÇÃO NECESSÁRIA");
+    s.addShape(pres.shapes.RECTANGLE,{x:0.4,y:4.95,w:12.55,h:0.9,fill:{color:statusBg},line:{color:statusBg},shadow:sh()});
+    s.addText(statusTxt,{x:0.4,y:4.95,w:12.55,h:0.9,fontFace:"Calibri",fontSize:18,bold:true,color:C.white,align:"center",valign:"middle"});
+
+    // Comparativo com mês anterior
+    if(r.prev.total > 0){
+      const delta = (r.taxa - r.prev.taxa).toFixed(1);
+      const dCl = delta > 0 ? C.green : (delta < 0 ? C.red : C.gray);
+      const dSign = delta > 0 ? "+" : "";
+      s.addText(`Comparativo com mês anterior: ${r.prev.total} entregas · ${r.prev.taxa}% taxa · ${dSign}${delta}p.p.`,
+        {x:0.4,y:6.05,w:12.55,h:0.5,fontFace:"Calibri",fontSize:13,color:dCl,align:"center",bold:true});
+    } else {
+      s.addText("Sem histórico no mês anterior — primeira aparição no painel.",
+        {x:0.4,y:6.05,w:12.55,h:0.5,fontFace:"Calibri",fontSize:13,color:C.gray,align:"center",italic:true});
+    }
+    foot(s);
+  }
+
+  // ════════════ SLIDE 3 — GRÁFICO ════════════
+  {
+    const s = pres.addSlide();
+    s.background = {color: C.bg};
+    head(s, "DISTRIBUIÇÃO DE ENTREGAS");
+
+    const labels = r.prev.total > 0 ? [CURRENT==='mai'?'Abril 2026':'Mês anterior', CURRENT_DATA.mes] : [CURRENT_DATA.mes];
+    const sucData = r.prev.total > 0 ? [r.prev.sucesso, r.sucesso] : [r.sucesso];
+    const foraData = r.prev.total > 0 ? [r.prev.fora, r.fora] : [r.fora];
+
+    s.addChart(pres.charts.BAR, [
+      {name:"No Prazo", labels:labels, values:sucData},
+      {name:"Fora do Prazo", labels:labels, values:foraData}
+    ], {
+      x:0.5, y:1.05, w:8.3, h:5.9,
+      barDir:"col", barGrouping:"stacked",
+      chartColors:[C.blue, C.or],
+      chartArea:{fill:{color:"FFFFFF"},roundedCorners:true},
+      catAxisLabelColor:C.gray, catAxisLabelFontFace:"Calibri", catAxisLabelFontSize:12,
+      valAxisLabelColor:C.gray, valAxisLabelFontFace:"Calibri", valAxisLabelFontSize:10,
+      showLegend:true, legendPos:"b", legendFontFace:"Calibri", legendFontSize:11, legendColor:C.gray,
+      showTitle:false, dataLabelColor:C.white, showValue:true, dataLabelFontSize:11, dataLabelFontBold:true
+    });
+
+    // Painel lateral com info
+    s.addShape(pres.shapes.RECTANGLE,{x:9.1,y:1.05,w:3.85,h:5.9,fill:{color:C.navy},line:{color:C.navy},shadow:sh()});
+    s.addText("DETALHES DO PERÍODO",{x:9.25,y:1.2,w:3.6,h:0.35,fontFace:"Calibri",fontSize:11,color:C.or,bold:true,charSpacing:2});
+    s.addShape(pres.shapes.RECTANGLE,{x:9.25,y:1.55,w:0.8,h:0.03,fill:{color:C.or},line:{color:C.or}});
+    
+    const txtPanel = [
+      `${CURRENT_DATA.mes}`, "",
+      `Total: ${r.total} entregas`,
+      `No prazo: ${r.sucesso} (${r.taxa}%)`,
+      `Fora do prazo: ${r.fora}`, "",
+      `UFs atendidas: ${r.ufs.length}`,
+      `Destinatários: ${r.dest.length}+`,
+      `Clientes: ${r.clientes.length}+`, "",
+      `Ranking #${r.rank} de ${CURRENT_DATA.responsaveis.length}`
+    ].join("\n");
+    s.addText(txtPanel,{x:9.25,y:1.75,w:3.6,h:5,fontFace:"Calibri",fontSize:12,color:C.white,valign:"top",paraSpaceBefore:2});
+
+    foot(s);
+  }
+
+  // ════════════ SLIDE 4 — MDS FORA DO PRAZO ════════════
+  if(r.mds_fora.length > 0){
+    const PER_SLIDE = 18;
+    const totalSlides = Math.ceil(r.mds_fora.length / PER_SLIDE);
+    for(let p=0; p<totalSlides; p++){
+      const s = pres.addSlide();
+      s.background = {color: C.bg};
+      head(s, totalSlides > 1 ? `MDS FORA DO PRAZO (${p+1}/${totalSlides})` : "MDS FORA DO PRAZO");
+
+      const chunk = r.mds_fora.slice(p*PER_SLIDE, (p+1)*PER_SLIDE);
+      const rows = [[
+        {text:"MD",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}},
+        {text:"CLIENTE",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}},
+        {text:"DESTINATÁRIO",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}},
+        {text:"UF",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}},
+        {text:"PREV.",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}},
+        {text:"ENTREGA",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}},
+        {text:"STATUS",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}}
+      ]];
+      chunk.forEach((m,i)=>{
+        const bg = i%2===0 ? "FFFFFF" : "F1F5F9";
+        rows.push([
+          {text:m.md,options:{fill:{color:bg},fontFace:"Calibri",fontSize:9,color:C.or,bold:true}},
+          {text:m.cliente,options:{fill:{color:bg},fontFace:"Calibri",fontSize:9,color:C.navy}},
+          {text:m.dest,options:{fill:{color:bg},fontFace:"Calibri",fontSize:9,color:C.gray}},
+          {text:m.uf,options:{fill:{color:bg},fontFace:"Calibri",fontSize:9,color:C.navy,bold:true,align:"center"}},
+          {text:m.prev,options:{fill:{color:bg},fontFace:"Calibri",fontSize:9,color:C.gray}},
+          {text:m.entrega||"—",options:{fill:{color:bg},fontFace:"Calibri",fontSize:9,color:C.gray}},
+          {text:m.status.length>25?m.status.slice(0,25)+"…":m.status,options:{fill:{color:bg},fontFace:"Calibri",fontSize:8,color:C.red,italic:true}}
+        ]);
+      });
+      s.addTable(rows,{x:0.4,y:1.05,w:12.55,colW:[1.3,2.7,2.7,0.7,1.4,1.4,2.35],rowH:0.3,border:{type:"solid",pt:0.5,color:"E2E8F0"}});
+
+      s.addText(`Total de MDs fora do prazo: ${r.mds_fora.length} · Mostrando ${chunk.length} nesta página`,
+        {x:0.4,y:6.85,w:12.55,h:0.35,fontFace:"Calibri",fontSize:11,color:C.gray,bold:true});
+      foot(s);
+    }
+  } else {
+    const s = pres.addSlide();
+    s.background = {color: C.bg};
+    head(s, "MDS FORA DO PRAZO");
+    s.addShape(pres.shapes.RECTANGLE,{x:0.4,y:1.05,w:12.55,h:5.9,fill:{color:C.green,transparency:80},line:{color:C.green,width:2}});
+    s.addText("✓",{x:0.4,y:2,w:12.55,h:1.5,fontFace:"Calibri",fontSize:96,bold:true,color:C.green,align:"center",valign:"middle"});
+    s.addText("EXCELENTE! Nenhum MD fora do prazo neste mês.",{x:0.4,y:3.7,w:12.55,h:0.8,fontFace:"Calibri",fontSize:24,bold:true,color:C.navy,align:"center"});
+    s.addText("100% das entregas dentro do SLA — performance exemplar.",{x:0.4,y:4.6,w:12.55,h:0.5,fontFace:"Calibri",fontSize:14,color:C.gray,align:"center"});
+    foot(s);
+  }
+
+  // ════════════ SLIDE 5 — PERFORMANCE POR UF ════════════
+  if(r.ufs.length > 0){
+    const s = pres.addSlide();
+    s.background = {color: C.bg};
+    head(s, "PERFORMANCE POR UF");
+
+    const ufRows = [[
+      {text:"UF",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:11,align:"center"}},
+      {text:"TOTAL",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:11,align:"center"}},
+      {text:"NO PRAZO",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:11,align:"center"}},
+      {text:"FORA",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:11,align:"center"}},
+      {text:"TAXA",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:11,align:"center"}},
+      {text:"STATUS",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:11,align:"center"}}
+    ]];
+    r.ufs.slice(0,15).forEach((u,i)=>{
+      const bg = i%2===0?"FFFFFF":"F1F5F9";
+      const cl = u.taxa >= META ? C.green : (u.taxa >= 85 ? C.yellow : C.red);
+      const status = u.taxa >= META ? "✓ Na meta" : (u.taxa >= 85 ? "⚠ Atenção" : "✗ Abaixo");
+      ufRows.push([
+        {text:u.uf||"N/A",options:{fill:{color:bg},fontFace:"Calibri",fontSize:11,bold:true,align:"center",color:C.navy}},
+        {text:u.total.toString(),options:{fill:{color:bg},fontFace:"Calibri",fontSize:11,align:"center"}},
+        {text:u.sucesso.toString(),options:{fill:{color:bg},fontFace:"Calibri",fontSize:11,color:C.green,align:"center"}},
+        {text:u.fora.toString(),options:{fill:{color:bg},fontFace:"Calibri",fontSize:11,color:u.fora>0?C.red:C.gray,align:"center"}},
+        {text:u.taxa+"%",options:{fill:{color:bg},fontFace:"Calibri",fontSize:12,bold:true,color:cl,align:"center"}},
+        {text:status,options:{fill:{color:bg},fontFace:"Calibri",fontSize:10,color:cl,align:"center"}}
+      ]);
+    });
+    s.addTable(ufRows,{x:1.5,y:1.05,w:10.35,colW:[1.2,1.55,1.85,1.35,1.7,2.7],rowH:0.35,border:{type:"solid",pt:0.5,color:"E2E8F0"}});
+
+    foot(s);
+  }
+
+  // ════════════ SLIDE 6 — DESTINATÁRIOS ════════════
+  if(r.dest.length > 0){
+    const s = pres.addSlide();
+    s.background = {color: C.bg};
+    head(s, "TOP DESTINATÁRIOS");
+
+    const dRows = [[
+      {text:"#",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10,align:"center"}},
+      {text:"DESTINATÁRIO",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10}},
+      {text:"TOTAL",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10,align:"center"}},
+      {text:"FORA",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10,align:"center"}},
+      {text:"TAXA",options:{bold:true,color:C.white,fill:{color:C.navy},fontFace:"Calibri",fontSize:10,align:"center"}}
+    ]];
+    r.dest.slice(0,15).forEach((d,i)=>{
+      const bg = i%2===0?"FFFFFF":"F1F5F9";
+      const cl = d.taxa >= META ? C.green : (d.taxa >= 85 ? C.yellow : C.red);
+      dRows.push([
+        {text:(i+1).toString(),options:{fill:{color:bg},fontFace:"Calibri",fontSize:10,bold:true,align:"center",color:C.or}},
+        {text:d.dest,options:{fill:{color:bg},fontFace:"Calibri",fontSize:10,color:C.navy}},
+        {text:d.total.toString(),options:{fill:{color:bg},fontFace:"Calibri",fontSize:10,align:"center"}},
+        {text:d.fora.toString(),options:{fill:{color:bg},fontFace:"Calibri",fontSize:10,color:d.fora>0?C.red:C.gray,align:"center"}},
+        {text:d.taxa+"%",options:{fill:{color:bg},fontFace:"Calibri",fontSize:11,bold:true,color:cl,align:"center"}}
+      ]);
+    });
+    s.addTable(dRows,{x:0.5,y:1.05,w:12.3,colW:[0.7,6.6,1.7,1.7,1.6],rowH:0.32,border:{type:"solid",pt:0.5,color:"E2E8F0"}});
+    foot(s);
+  }
+
+  // ════════════ SLIDE FINAL — ENCERRAMENTO ════════════
+  {
+    const s = pres.addSlide();
+    s.background = {color: C.navy};
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:13.33,h:7.5,fill:{color:C.navy},line:{color:C.navy}});
+    s.addShape(pres.shapes.RECTANGLE,{x:0,y:3.5,w:13.33,h:0.05,fill:{color:C.or},line:{color:C.or}});
+    s.addText("PORTO",{x:5,y:2,w:1.8,h:0.9,fontFace:"Calibri",fontSize:42,bold:true,color:C.white,align:"right",valign:"middle"});
+    s.addText("EX",{x:6.8,y:2,w:1.5,h:0.9,fontFace:"Calibri",fontSize:42,bold:true,color:C.or,align:"left",valign:"middle"});
+    s.addText("Obrigado pela parceria.",{x:0,y:3.7,w:13.33,h:0.6,fontFace:"Calibri",fontSize:24,color:C.white,align:"center"});
+    s.addText("Vamos juntos buscar a excelência operacional.",{x:0,y:4.3,w:13.33,h:0.5,fontFace:"Calibri",fontSize:14,color:C.gray2,align:"center"});
+    s.addText("Portoex Logística · performance@portoex.com.br",{x:0,y:6.7,w:13.33,h:0.4,fontFace:"Calibri",fontSize:11,color:C.gray2,align:"center"});
+  }
+
+  // Salvar
+  const fname = `Portoex_${r.name.replace(/[^A-Z0-9]/gi,'_').slice(0,30)}_${CURRENT_DATA.mes_short}.pptx`;
+  pres.writeFile({fileName:fname}).then(()=>{
+    showToast(`✓ ${fname} gerado!`);
+  });
+}
+</script>
+</body>
+</html>
